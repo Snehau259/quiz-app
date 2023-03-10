@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 
 class gameProvider extends ChangeNotifier {
   BuildContext context;
-  String? question;
+  List? resultList;
+  bool? answer;
   final Dio dio = Dio();
   int itemCount = 0;
   gameProvider({required this.context}) {
     dio.options.baseUrl = "https://opentdb.com/api.php";
 
-    print("hello");
     getQuestionsFromAPI();
   }
 
@@ -22,7 +22,18 @@ class gameProvider extends ChangeNotifier {
       'type': 'boolean'
     });
     var jsonResponse = jsonDecode(response.toString());
-    question = jsonResponse['results'][itemCount]['question'];
+    resultList = jsonResponse['results'];
+    notifyListeners();
+    
+  }
+
+  String? getQuestion() {
+    return resultList?[itemCount]['question'];
+  }
+
+  void evaluateAnswer(bool answer) {
+    print(resultList?[itemCount]['correct_answer'] == answer);
+    itemCount++;
     notifyListeners();
   }
 }

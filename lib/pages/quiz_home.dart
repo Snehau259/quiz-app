@@ -22,16 +22,17 @@ class MyHomePage extends StatelessWidget {
   Widget buildUI() {
     return Builder(builder: (context) {
       quizProvider = context.watch<gameProvider>();
-      if (quizProvider!.question != null) {
+      print("resultList");
+      print(quizProvider?.resultList);
+      if (quizProvider?.getQuestion() != null) {
         return Scaffold(
           backgroundColor: Colors.grey[900],
-          // if (question!=null){}else{}
           body: gameUI(),
         );
       } else {
         return Center(
           child: CircularProgressIndicator(
-            color: Colors.white,
+            color: Colors.grey[900],
           ),
         );
       }
@@ -45,7 +46,6 @@ class MyHomePage extends StatelessWidget {
           padding: EdgeInsets.symmetric(
             horizontal: deviceHeight! * 0.05,
           ),
-          // color: Colors.orange[500],
           child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               mainAxisSize: MainAxisSize.max,
@@ -73,7 +73,9 @@ class MyHomePage extends StatelessWidget {
         BoxShadow(color: Color.fromARGB(255, 102, 187, 106), blurRadius: 5)
       ]),
       child: MaterialButton(
-        onPressed: () {},
+        onPressed: () {
+          quizProvider?.evaluateAnswer(true);
+        },
         color: Colors.green,
         minWidth: deviceWidth! * 0.75,
         height: deviceHeight! * .1,
@@ -91,7 +93,9 @@ class MyHomePage extends StatelessWidget {
         BoxShadow(color: Color.fromARGB(255, 239, 83, 80), blurRadius: 5)
       ]),
       child: MaterialButton(
-        onPressed: () {},
+        onPressed: () {
+          quizProvider?.evaluateAnswer(false);
+        },
         color: Colors.red,
         minWidth: deviceWidth! * 0.75,
         height: deviceHeight! * .1,
@@ -104,11 +108,15 @@ class MyHomePage extends StatelessWidget {
   }
 
   Widget QuestionText() => Container(
-        color: Colors.red,
-        child: Text(
-          quizProvider!.question!,
-          style: TextStyle(
-              fontSize: 30, fontWeight: FontWeight.w400, color: Colors.white),
+        child: Center(
+          child: Text(
+            quizProvider!.getQuestion()!,
+            style: TextStyle(
+              fontSize: 30,
+              fontWeight: FontWeight.w400,
+              color: Colors.white,
+            ),
+          ),
         ),
       );
 }
