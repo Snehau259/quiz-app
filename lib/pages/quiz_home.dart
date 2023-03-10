@@ -6,13 +6,12 @@ import '../provider/gameProvider.dart';
 class MyHomePage extends StatelessWidget {
   double? deviceHeight, deviceWidth;
   gameProvider? quizProvider;
- 
+
   @override
   Widget build(BuildContext context) {
     deviceWidth = MediaQuery.of(context).size.width;
     deviceHeight = MediaQuery.of(context).size.height;
     return ChangeNotifierProvider(
-     
       create: (providercontext) => gameProvider(
         context: context,
       ),
@@ -23,10 +22,19 @@ class MyHomePage extends StatelessWidget {
   Widget buildUI() {
     return Builder(builder: (context) {
       quizProvider = context.watch<gameProvider>();
-      return Scaffold(
-        backgroundColor: Colors.grey[900],
-        body: gameUI(),
-      );
+      if (quizProvider!.question != null) {
+        return Scaffold(
+          backgroundColor: Colors.grey[900],
+          // if (question!=null){}else{}
+          body: gameUI(),
+        );
+      } else {
+        return Center(
+          child: CircularProgressIndicator(
+            color: Colors.white,
+          ),
+        );
+      }
     });
   }
 
@@ -95,10 +103,12 @@ class MyHomePage extends StatelessWidget {
     );
   }
 
-  Widget QuestionText() => Text(
-        "Test question1,nithing interesting",
-        style: TextStyle(
-            fontSize: 30, fontWeight: FontWeight.w400, color: Colors.white),
+  Widget QuestionText() => Container(
+        color: Colors.red,
+        child: Text(
+          quizProvider!.question!,
+          style: TextStyle(
+              fontSize: 30, fontWeight: FontWeight.w400, color: Colors.white),
+        ),
       );
 }
-
