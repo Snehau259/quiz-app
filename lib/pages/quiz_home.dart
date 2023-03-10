@@ -1,22 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:frivia/provider/gameProvider.dart';
+import 'package:provider/provider.dart';
+import '../provider/gameProvider.dart';
 
 class MyHomePage extends StatelessWidget {
   double? deviceHeight, deviceWidth;
-  // const MyHomePage({super.key, required this.title});
-
-  // final String title;
+  gameProvider? quizProvider;
+ 
   @override
   Widget build(BuildContext context) {
     deviceWidth = MediaQuery.of(context).size.width;
     deviceHeight = MediaQuery.of(context).size.height;
-
-    return Scaffold(
-      backgroundColor: Colors.grey[900],
-      body: gameUI(),
+    return ChangeNotifierProvider(
+     
+      create: (providercontext) => gameProvider(
+        context: context,
+      ),
+      child: buildUI(),
     );
   }
 
-  SafeArea gameUI() {
+  Widget buildUI() {
+    return Builder(builder: (context) {
+      quizProvider = context.watch<gameProvider>();
+      return Scaffold(
+        backgroundColor: Colors.grey[900],
+        body: gameUI(),
+      );
+    });
+  }
+
+  Widget gameUI() {
     return SafeArea(
       child: Center(
         child: Container(
@@ -87,3 +101,4 @@ class MyHomePage extends StatelessWidget {
             fontSize: 30, fontWeight: FontWeight.w400, color: Colors.white),
       );
 }
+
