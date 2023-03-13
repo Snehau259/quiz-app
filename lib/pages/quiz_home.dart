@@ -6,15 +6,14 @@ import '../provider/gameProvider.dart';
 class MyHomePage extends StatelessWidget {
   double? deviceHeight, deviceWidth;
   gameProvider? quizProvider;
-
+  String? difficultyLevel;
+  MyHomePage({required this.difficultyLevel});
   @override
   Widget build(BuildContext context) {
     deviceWidth = MediaQuery.of(context).size.width;
     deviceHeight = MediaQuery.of(context).size.height;
     return ChangeNotifierProvider(
-      create: (providercontext) => gameProvider(
-        context: context,
-      ),
+      create: (providercontext) => gameProvider(context: context,difficultyLevel: difficultyLevel),
       child: buildUI(),
     );
   }
@@ -74,7 +73,7 @@ class MyHomePage extends StatelessWidget {
       ]),
       child: MaterialButton(
         onPressed: () {
-                    print("true button clicked");
+          print("true button clicked");
 
           quizProvider?.evaluateAnswer("True");
         },

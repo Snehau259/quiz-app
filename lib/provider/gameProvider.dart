@@ -2,15 +2,18 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import '../pages/app_home.dart';
 
 class gameProvider extends ChangeNotifier {
   BuildContext context;
   List? resultList;
+  String? difficultyLevel;
   bool? answer;
   final Dio dio = Dio();
   int itemCount = 0;
+  int score = 0;
   int? maxQuestions;
-  gameProvider({required this.context}) {
+  gameProvider({required this.context,this.difficultyLevel}) {
     dio.options.baseUrl = "https://opentdb.com/api.php";
 
     getQuestionsFromAPI();
@@ -19,7 +22,7 @@ class gameProvider extends ChangeNotifier {
   Future<void> getQuestionsFromAPI() async {
     var response = await dio.get('', queryParameters: {
       'amount': 10,
-      'difficulty': 'easy',
+      'difficulty': difficultyLevel?.toLowerCase(),
       'type': 'boolean'
     });
     var jsonResponse = jsonDecode(response.toString());
@@ -36,6 +39,7 @@ class gameProvider extends ChangeNotifier {
 
   Future<void> evaluateAnswer(String answer) async {
     bool isCorrect = (resultList?[itemCount]['correct_answer'] == answer);
+    if (isCorrect) score++;
     itemCount++;
 
     showDialog(
@@ -57,13 +61,12 @@ class gameProvider extends ChangeNotifier {
             return AlertDialog(
               backgroundColor: Colors.blue,
               title: Text('Game over.'),
-              content: Text('Score 0/0'),
+              content: Text('Score ${score}/${maxQuestions}'),
             );
           });
       await Future.delayed(Duration(seconds: 1));
       Navigator.pop(context);
       Navigator.pop(context);
-
     } else {
       print("item count inside if else-else ${itemCount}");
       notifyListeners();
