@@ -60,8 +60,10 @@ class gameProvider extends ChangeNotifier {
               content: Text('Score 0/0'),
             );
           });
-      await Future.delayed(Duration(seconds: 3));
+      await Future.delayed(Duration(seconds: 1));
       Navigator.pop(context);
+      Navigator.pop(context);
+
     } else {
       print("item count inside if else-else ${itemCount}");
       notifyListeners();
