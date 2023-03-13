@@ -22,9 +22,9 @@ class MyHomePage extends StatelessWidget {
   Widget buildUI() {
     return Builder(builder: (context) {
       quizProvider = context.watch<gameProvider>();
-      print("resultList");
-      print(quizProvider?.resultList);
-      if (quizProvider?.getQuestion() != null) {
+      // print("resultList");
+      // print(quizProvider?.resultList);
+      if (quizProvider?.resultList != null) {
         return Scaffold(
           backgroundColor: Colors.grey[900],
           body: gameUI(),
@@ -74,7 +74,9 @@ class MyHomePage extends StatelessWidget {
       ]),
       child: MaterialButton(
         onPressed: () {
-          quizProvider?.evaluateAnswer(true);
+                    print("true button clicked");
+
+          quizProvider?.evaluateAnswer("True");
         },
         color: Colors.green,
         minWidth: deviceWidth! * 0.75,
@@ -94,7 +96,8 @@ class MyHomePage extends StatelessWidget {
       ]),
       child: MaterialButton(
         onPressed: () {
-          quizProvider?.evaluateAnswer(false);
+          quizProvider?.evaluateAnswer("False");
+          print("false button clicked");
         },
         color: Colors.red,
         minWidth: deviceWidth! * 0.75,

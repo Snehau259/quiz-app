@@ -9,6 +9,7 @@ class gameProvider extends ChangeNotifier {
   bool? answer;
   final Dio dio = Dio();
   int itemCount = 0;
+  int? maxQuestions;
   gameProvider({required this.context}) {
     dio.options.baseUrl = "https://opentdb.com/api.php";
 
@@ -23,17 +24,47 @@ class gameProvider extends ChangeNotifier {
     });
     var jsonResponse = jsonDecode(response.toString());
     resultList = jsonResponse['results'];
+    maxQuestions = resultList?.length;
     notifyListeners();
-    
   }
 
   String? getQuestion() {
+    print("This is question[${itemCount}]");
+
     return resultList?[itemCount]['question'];
   }
 
-  void evaluateAnswer(bool answer) {
-    print(resultList?[itemCount]['correct_answer'] == answer);
+  Future<void> evaluateAnswer(String answer) async {
+    bool isCorrect = (resultList?[itemCount]['correct_answer'] == answer);
     itemCount++;
-    notifyListeners();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: isCorrect ? Colors.green[500] : Colors.red[500],
+          icon: isCorrect ? Icon(Icons.check_circle) : Icon(Icons.cancel),
+        );
+      },
+    );
+    await Future.delayed(Duration(seconds: 1));
+    Navigator.pop(context);
+    if (itemCount == maxQuestions!) {
+      print("item count inside if else-if ${itemCount}");
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              backgroundColor: Colors.blue,
+              title: Text('Game over.'),
+              content: Text('Score 0/0'),
+            );
+          });
+      await Future.delayed(Duration(seconds: 3));
+      Navigator.pop(context);
+    } else {
+      print("item count inside if else-else ${itemCount}");
+      notifyListeners();
+    }
   }
 }
